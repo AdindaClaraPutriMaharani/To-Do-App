@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="To-Do App bergaya buku catatan oranye. Tambah, centang, edit, filter, dan hapus to-do. Data tersimpan di browser.">
+  <title>To-Do App</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23ff8a2b'/%3E%3Ccircle cx='11' cy='14' r='2' fill='%236b4430'/%3E%3Ccircle cx='21' cy='14' r='2' fill='%236b4430'/%3E%3Cpath d='M12.5 19q1.8 2.6 3.5 0q1.7 2.6 3.5 0' fill='none' stroke='%236b4430' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Patrick+Hand&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Kumpulan ikon imut (dipakai lewat <use href="#id">) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <!-- kucing oranye -->
+      <symbol id="i-cat" viewBox="0 0 48 48">
+        <path d="M8 21 10 5l11 7z" fill="var(--c-body)" stroke="var(--c-line)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M40 21 38 5 27 12z" fill="var(--c-body)" stroke="var(--c-line)" stroke-width="2.5" stroke-linejoin="round"/>
+        <ellipse cx="24" cy="28" rx="18" ry="15" fill="var(--c-body)" stroke="var(--c-line)" stroke-width="2.5"/>
+        <circle cx="17" cy="27" r="2.4" fill="var(--c-line)"/>
+        <circle cx="31" cy="27" r="2.4" fill="var(--c-line)"/>
+        <ellipse cx="11.5" cy="32" rx="3.2" ry="2" fill="var(--c-cheek)"/>
+        <ellipse cx="36.5" cy="32" rx="3.2" ry="2" fill="var(--c-cheek)"/>
+        <path d="M21 31.5q1.5 2.5 3 0q1.5 2.5 3 0" fill="none" stroke="var(--c-line)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+
+      <!-- kucing tidur (untuk daftar kosong) -->
+      <symbol id="i-cat-sleep" viewBox="0 0 60 48">
+        <path d="M8 21 10 5l11 7z" fill="var(--c-body)" stroke="var(--c-line)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M40 21 38 5 27 12z" fill="var(--c-body)" stroke="var(--c-line)" stroke-width="2.5" stroke-linejoin="round"/>
+        <ellipse cx="24" cy="28" rx="18" ry="15" fill="var(--c-body)" stroke="var(--c-line)" stroke-width="2.5"/>
+        <path d="M13.5 27q3.5 3.5 7 0M27.5 27q3.5 3.5 7 0" fill="none" stroke="var(--c-line)" stroke-width="2.2" stroke-linecap="round"/>
+        <ellipse cx="11.5" cy="32" rx="3.2" ry="2" fill="var(--c-cheek)"/>
+        <ellipse cx="36.5" cy="32" rx="3.2" ry="2" fill="var(--c-cheek)"/>
+        <circle cx="24" cy="32.5" r="1.3" fill="var(--c-line)"/>
+        <path d="M47 21h5l-5 6h5M52.5 8h4l-4 5h4" fill="none" stroke="var(--c-line)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+
+      <!-- tong sampah yang tersenyum -->
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M9.5 4.5h5M4.5 7h15"/>
+        <path d="M6.3 7l.9 11.8a1.6 1.6 0 0 0 1.6 1.5h6.4a1.6 1.6 0 0 0 1.6-1.5L17.7 7"/>
+        <circle cx="9.9" cy="12.2" r=".95" fill="currentColor" stroke="none"/>
+        <circle cx="14.1" cy="12.2" r=".95" fill="currentColor" stroke="none"/>
+        <path d="M10.6 14.6q1.4 1.3 2.8 0"/>
+      </symbol>
+
+      <!-- pensil -->
+      <symbol id="i-pencil" viewBox="0 0 24 24">
+        <path d="M3.5 20.5l.9-4.1L15.6 5.2a2.2 2.2 0 0 1 3.1 0l.1.1a2.2 2.2 0 0 1 0 3.1L7.6 19.6l-4.1.9z"/>
+        <path d="M13.8 7l3.2 3.2"/>
+      </symbol>
+
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14"/>
+      </symbol>
+
+      <symbol id="i-star" viewBox="0 0 24 24">
+        <path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7L12 3z"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <main class="notebook">
+    <div class="rings" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+
+    <div class="paper">
+      <header class="head">
+        <svg class="ico-cat" aria-hidden="true"><use href="#i-cat"></use></svg>
+        <div>
+          <h1>To-Do App</h1>
+          <p class="sub">Catatan kecil untuk hari ini</p>
+        </div>
+        <span class="date-sticker" id="today"></span>
+      </header>
+
+      <form id="form" autocomplete="off">
+        <input class="field" type="text" id="new-todo" placeholder="Mau mengerjakan apa hari ini?" maxlength="200" aria-label="To-do baru">
+        <button type="submit" class="add-btn">
+          <svg class="ico" aria-hidden="true"><use href="#i-plus"></use></svg>
+          Tambah
+        </button>
+      </form>
+
+      <div class="tabs" id="tabs" role="group" aria-label="Filter to-do">
+        <button type="button" class="tab" data-filter="all" aria-pressed="true">Semua <span class="n" id="n-all">0</span></button>
+        <button type="button" class="tab" data-filter="active" aria-pressed="false">Aktif <span class="n" id="n-active">0</span></button>
+        <button type="button" class="tab" data-filter="done" aria-pressed="false">Selesai <span class="n" id="n-done">0</span></button>
+      </div>
+
+      <div class="lines">
+        <ul id="list"></ul>
+      </div>
+
+      <footer>
+        <span class="count">
+          <svg class="ico-star" aria-hidden="true"><use href="#i-star"></use></svg>
+          <span id="summary"></span>
+        </span>
+        <button type="button" class="link-btn" id="clear">Hapus yang selesai</button>
+      </footer>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
